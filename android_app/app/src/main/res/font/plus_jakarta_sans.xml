@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<font-family xmlns:android="http://schemas.android.com/apk/res/android" xmlns:ns2="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" tools:targetApi="26">
+    <font android:font="@font/jakarta_regular" android:fontStyle="normal" android:fontWeight="400" ns2:font="@font/jakarta_regular" ns2:fontStyle="normal" ns2:fontWeight="400" />
+    <font android:font="@font/jakarta_medium" android:fontStyle="normal" android:fontWeight="500" ns2:font="@font/jakarta_medium" ns2:fontStyle="normal" ns2:fontWeight="500" />
+    <font android:font="@font/jakarta_semibold" android:fontStyle="normal" android:fontWeight="600" ns2:font="@font/jakarta_semibold" ns2:fontStyle="normal" ns2:fontWeight="600" />
+    <font android:font="@font/jakarta_bold" android:fontStyle="normal" android:fontWeight="700" ns2:font="@font/jakarta_bold" ns2:fontStyle="normal" ns2:fontWeight="700" />
+</font-family>

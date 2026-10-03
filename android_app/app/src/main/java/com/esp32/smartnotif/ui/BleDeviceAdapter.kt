@@ -69,7 +69,8 @@ class BleDeviceAdapter(
                 holder.btnConnectDevice.text = context.getString(R.string.btn_disconnect)
                 holder.btnConnectDevice.setIconResource(R.drawable.ic_bluetooth_disabled)
                 holder.btnConnectDevice.iconTint =
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.white))
+                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.on_status_action))
+                holder.btnConnectDevice.setTextColor(ContextCompat.getColor(context, R.color.on_status_action))
                 holder.btnConnectDevice.backgroundTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.status_disconnected))
                 holder.btnConnectDevice.isEnabled = true
@@ -80,7 +81,8 @@ class BleDeviceAdapter(
                 holder.btnConnectDevice.text = context.getString(R.string.btn_connecting)
                 holder.btnConnectDevice.icon = null
                 holder.btnConnectDevice.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.status_connecting))
+                    ContextCompat.getColorStateList(context, R.color.button_fill)
+                holder.btnConnectDevice.setTextColor(ContextCompat.getColorStateList(context, R.color.button_foreground))
                 holder.btnConnectDevice.isEnabled = false
                 holder.ivDeviceIcon.imageTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.status_connecting))
@@ -89,7 +91,9 @@ class BleDeviceAdapter(
                 holder.btnConnectDevice.text = context.getString(R.string.btn_connect)
                 holder.btnConnectDevice.icon = null
                 holder.btnConnectDevice.backgroundTintList =
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primary))
+                    ContextCompat.getColorStateList(context, R.color.button_fill)
+                holder.btnConnectDevice.setTextColor(ContextCompat.getColorStateList(context, R.color.button_foreground))
+                holder.btnConnectDevice.iconTint = ContextCompat.getColorStateList(context, R.color.button_foreground)
                 holder.btnConnectDevice.isEnabled = true
                 holder.ivDeviceIcon.imageTintList =
                     ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primary))

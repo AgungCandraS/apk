@@ -1,1342 +1,237 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background">
-
-    <!-- CONTAINER KONTEN UTAMA -->
-    <FrameLayout
-        android:id="@+id/contentContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/navDivider"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <!-- Tab 1: Menu -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/layoutMenu"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:clipToPadding="false"
-            android:visibility="visible">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="28dp">
-
-                <!-- Header Menu Utama -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_name"
-                        android:textColor="@color/text_primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/app_subtitle"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp" />
+<?xml version='1.0' encoding='utf-8'?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/bg_canvas" android:clipChildren="false">
+    <com.esp32.smartnotif.ui.GlassBackdropView android:id="@+id/glassBackdrop" android:layout_width="0dp" android:layout_height="0dp" android:importantForAccessibility="no" app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <FrameLayout android:id="@+id/contentContainer" android:layout_width="0dp" android:layout_height="0dp" app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintWidth_max="680dp">
+        <androidx.core.widget.NestedScrollView android:id="@+id/layoutMenu" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:clipToPadding="false" android:visibility="visible" android:paddingBottom="112dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/page_gutter" android:paddingTop="24dp" android:paddingBottom="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_home" android:textColor="@color/text_primary" android:textSize="22sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/subtitle_home" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="6dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                 </LinearLayout>
-
-                <!-- KARTU STATUS KONEKSI ESP32 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="2dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:src="@drawable/ic_bluetooth"
-                            app:tint="@color/text_muted"
-                            android:contentDescription="Status Bluetooth" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/title_ble_status"
-                            android:textColor="@color/text_muted"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="12dp">
-
-                        <View
-                            android:id="@+id/viewStatusDot"
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:background="@drawable/bg_badge"
-                            android:backgroundTint="@color/status_connecting" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_marginStart="12dp">
-
-                            <TextView
-                                android:id="@+id/tvBleStatus"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/status_connecting"
-                                android:textColor="@color/text_primary"
-                                android:textSize="15sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tvBleDetail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/device_auto_sync_desc"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="11.5sp"
-                                android:layout_marginTop="2dp" />
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp" android:layout_marginBottom="20dp" android:elevation="2dp" app:glassCornerRadius="22dp" app:glassTone="hero">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/title_ble_status" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:letterSpacing="0.08" app:fontFamily="@font/plus_jakarta_sans" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="14dp">
+                        <FrameLayout android:layout_width="44dp" android:layout_height="44dp" android:background="@drawable/bg_glass_icon" android:id="@+id/homeDeviceIcon">
+                            <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_bluetooth" android:importantForAccessibility="no" app:tint="@color/primary" />
+                        </FrameLayout>
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:orientation="vertical" android:id="@+id/homeDeviceIdentity">
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/home_connect_title" android:textColor="@color/text_primary" android:textSize="19sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:id="@+id/tvHomeDeviceName" app:fontFamily="@font/plus_jakarta_sans" />
+                            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/home_ble_hint" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="4dp" android:id="@+id/tvHomeDeviceAddress" app:fontFamily="@font/plus_jakarta_sans" />
                         </LinearLayout>
                     </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginTop="18dp">
+                        <View android:id="@+id/viewStatusDot" android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/text_muted" android:importantForAccessibility="no" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/status_disconnected" android:textColor="@color/text_secondary" android:textSize="13sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginStart="8dp" android:accessibilityLiveRegion="polite" android:id="@+id/tvBleStatus" app:fontFamily="@font/plus_jakarta_sans" />
+                    </LinearLayout>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/home_connect_desc" android:textColor="@color/text_secondary" android:textSize="14sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="8dp" android:id="@+id/tvBleDetail" app:fontFamily="@font/plus_jakarta_sans" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnHomeConnect" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/home_find_device" android:textSize="15sp" android:fontFamily="@font/plus_jakarta_sans" android:textAllCaps="false" android:textColor="@color/on_primary" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="14dp" app:backgroundTint="@color/primary" app:iconTint="@color/on_primary" app:icon="@drawable/ic_search" android:layout_marginTop="18dp" app:fontFamily="@font/plus_jakarta_sans" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/home_readiness" android:textColor="@color/text_secondary" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginBottom="20dp" android:id="@+id/tvHomeReadiness" app:fontFamily="@font/plus_jakarta_sans" />
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp" android:layout_marginTop="4dp">
+                    <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_filter_list" app:tint="@color/primary" android:importantForAccessibility="no" />
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/title_filter_apps" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:layout_weight="1" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:id="@+id/tvFilterSummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/filter_summary_initial" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                 </LinearLayout>
-
-                <!-- KARTU FILTER APLIKASI YANG DITERUSKAN (DI MENU UTAMA) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="10dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_filter_list"
-                            app:tint="@color/primary"
-                            android:contentDescription="Filter Notifikasi" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/title_filter_apps"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13.5sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchWA"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="6dp"
-                            android:text="@string/filter_wa"
-                            android:textColor="@color/text_primary"
-                            app:useMaterialThemeColors="false"
-                            app:thumbTint="@color/switch_thumb_selector"
-                            app:trackTint="@color/switch_track_selector"
-                            android:checked="true" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchTelegram"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/filter_telegram"
-                            android:textColor="@color/text_primary"
-                            app:useMaterialThemeColors="false"
-                            app:thumbTint="@color/switch_thumb_selector"
-                            app:trackTint="@color/switch_track_selector"
-                            android:checked="true" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="6dp">
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchSMS"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="6dp"
-                            android:text="@string/filter_sms"
-                            android:textColor="@color/text_primary"
-                            app:useMaterialThemeColors="false"
-                            app:thumbTint="@color/switch_thumb_selector"
-                            app:trackTint="@color/switch_track_selector"
-                            android:checked="true" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchIG"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="6dp"
-                            android:text="@string/filter_ig"
-                            android:textColor="@color/text_primary"
-                            app:useMaterialThemeColors="false"
-                            app:thumbTint="@color/switch_thumb_selector"
-                            app:trackTint="@color/switch_track_selector"
-                            android:checked="true" />
-                    </LinearLayout>
-                </LinearLayout>
-
-                <!-- Panel Uji Notifikasi Chat -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_notifications_active"
-                            app:tint="@color/primary"
-                            android:contentDescription="Uji Notifikasi" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_title_test_notif"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13.5sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_sub_test_notif"
-                                android:textColor="@color/text_muted"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_test_title"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxBackgroundColor="@color/card_bg_elevated"
-                        app:boxStrokeColor="@color/card_stroke"
-                        app:hintTextColor="@color/text_secondary"
-                        android:textColorHint="@color/text_muted">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTestSender"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            tools:text="@string/sample_sender"
-                            android:maxLines="1"
-                            android:inputType="textPersonName" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:hint="@string/hint_test_msg"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxBackgroundColor="@color/card_bg_elevated"
-                        app:boxStrokeColor="@color/card_stroke"
-                        app:hintTextColor="@color/text_secondary"
-                        android:textColorHint="@color/text_muted">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTestMessage"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            tools:text="@string/sample_message" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSendTest"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="14dp"
-                        android:text="@string/btn_send_test"
-                        android:textColor="@color/white"
-                        android:textSize="13.5sp"
-                        android:textStyle="bold"
-                        app:icon="@drawable/ic_send"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary" />
-                </LinearLayout>
-
-                <!-- Panel Uji Waktu dan Baterai -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_time"
-                            app:tint="@color/primary"
-                            android:contentDescription="Uji Waktu dan Baterai" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_title_test_time"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13.5sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_sub_test_time"
-                                android:textColor="@color/text_muted"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Preview Container Floating -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_floating"
-                        android:elevation="1dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_time_battery_payload"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvTimeBatteryPreview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="[TIME] --:--:--|--/--/----|--|--%"
-                            android:textColor="@color/text_primary"
-                            android:textSize="12.5sp"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/desc_time_battery"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTestSyncTime"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/btn_send_time_battery"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        app:icon="@drawable/ic_refresh"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary" />
-                </LinearLayout>
-
-                <!-- Panel Uji Prakiraan Cuaca -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_weather"
-                            app:tint="@color/primary"
-                            android:contentDescription="Uji Cuaca" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_title_test_weather"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13.5sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_sub_test_weather"
-                                android:textColor="@color/text_muted"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Preview Container Floating -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_floating"
-                        android:elevation="1dp"
-                        android:padding="12dp"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_weather_payload"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvWeatherPreview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="[WEATHER] Jakarta|30|1|33|24|6|1012"
-                            android:textColor="@color/text_primary"
-                            android:textSize="12.5sp"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/desc_weather"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTestSyncWeather"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/btn_send_weather_live"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        app:icon="@drawable/ic_refresh"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary" />
-
-                    <!-- Tombol Sampel Cuaca (Tap target minimal 44dp) -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTestSampleWeather"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:minHeight="44dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_send_weather_sample"
-                        android:textColor="@color/text_primary"
-                        android:textSize="12sp"
-                        app:icon="@drawable/ic_send"
-                        app:iconTint="@color/text_primary"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="12dp"
-                        app:strokeColor="@color/card_stroke"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/card_bg_elevated"
-                        android:elevation="1dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp" />
-                </LinearLayout>
-
-                <!-- Panel Uji Navigasi Google Maps -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_navigation"
-                            app:tint="@color/primary"
-                            android:contentDescription="Uji Navigasi" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:layout_marginStart="8dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_title_test_nav"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13.5sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/panel_sub_test_nav"
-                                android:textColor="@color/text_muted"
-                                android:textSize="11sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_nav_instruction"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp"
-                        app:boxBackgroundColor="@color/card_bg_elevated"
-                        app:boxStrokeColor="@color/card_stroke"
-                        app:hintTextColor="@color/text_secondary"
-                        android:textColorHint="@color/text_muted">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etNavInstruction"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
-                            android:textSize="13sp"
-                            tools:text="@string/sample_nav_instruction"
-                            android:maxLines="1"
-                            android:inputType="text" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp">
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginEnd="6dp"
-                            android:hint="@string/hint_nav_distance"
-                            app:boxCornerRadiusTopStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxBackgroundColor="@color/card_bg_elevated"
-                            app:boxStrokeColor="@color/card_stroke"
-                            app:hintTextColor="@color/text_secondary"
-                            android:textColorHint="@color/text_muted">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etNavDistance"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp"
-                                tools:text="@string/sample_nav_distance"
-                                android:maxLines="1"
-                                android:inputType="text" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="6dp"
-                            android:hint="@string/hint_nav_eta"
-                            app:boxCornerRadiusTopStart="12dp"
-                            app:boxCornerRadiusTopEnd="12dp"
-                            app:boxCornerRadiusBottomStart="12dp"
-                            app:boxCornerRadiusBottomEnd="12dp"
-                            app:boxBackgroundColor="@color/card_bg_elevated"
-                            app:boxStrokeColor="@color/card_stroke"
-                            app:hintTextColor="@color/text_secondary"
-                            android:textColorHint="@color/text_muted">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etNavEta"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp"
-                                tools:text="@string/sample_nav_eta"
-                                android:maxLines="1"
-                                android:inputType="text" />
-                        </com.google.android.material.textfield.TextInputLayout>
-                    </LinearLayout>
-
-                    <!-- Preview Container Floating -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_floating"
-                        android:elevation="1dp"
-                        android:padding="12dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/label_nav_preview"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvNavPreview"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            tools:text="[NAV] Belok Kanan Jl. Sudirman|200 m|15 mnt|1"
-                            android:textColor="@color/text_primary"
-                            android:textSize="12.5sp"
-                            android:fontFamily="monospace"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
-                    </LinearLayout>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTestNav"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/btn_send_nav"
-                        android:textColor="@color/white"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        app:icon="@drawable/ic_navigation"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary" />
-
-                    <!-- Tombol Hentikan Navigasi (Tap target minimal 44dp) -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTestNavStop"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:minHeight="44dp"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/btn_stop_nav"
-                        android:textColor="@color/status_disconnected"
-                        android:textSize="12sp"
-                        app:icon="@drawable/ic_stop"
-                        app:iconTint="@color/status_disconnected"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="12dp"
-                        app:strokeColor="@color/status_disconnected"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/card_bg_elevated"
-                        android:elevation="1dp"
-                        android:insetTop="0dp"
-                        android:insetBottom="0dp" />
-                </LinearLayout>
-
-                <!-- KARTU LOG NOTIFIKASI REAL-TIME -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:id="@+id/tvLogsTitle"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/title_live_logs"
-                            android:textColor="@color/text_muted"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <!-- Tombol Hapus Log (Tap target minimal 44dp) -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnClearLogs"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="44dp"
-                            android:minHeight="44dp"
-                            android:minWidth="44dp"
-                            android:text="@string/btn_clear_logs"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="11sp"
-                            app:icon="@drawable/ic_delete"
-                            app:iconSize="14dp"
-                            app:iconTint="@color/text_secondary"
-                            android:paddingHorizontal="8dp"
-                            android:paddingVertical="0dp" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvEmptyLogs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/logs_empty"
-                        android:textColor="@color/text_muted"
-                        android:textSize="12sp"
-                        android:gravity="center"
-                        android:padding="16dp" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvNotifLogs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_notif_log" />
-                </LinearLayout>
-
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:layout_marginBottom="16dp" android:paddingVertical="8dp" android:paddingHorizontal="18dp">
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchWA" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/filter_wa" android:textColor="@color/text_primary" app:useMaterialThemeColors="false" app:thumbTint="@color/switch_thumb_selector" app:trackTint="@color/switch_track_selector" android:checked="true" android:minHeight="52dp" android:textSize="15sp" android:background="?attr/selectableItemBackground" android:paddingVertical="8dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_stroke_subtle" android:importantForAccessibility="no" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchTelegram" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/filter_telegram" android:textColor="@color/text_primary" app:useMaterialThemeColors="false" app:thumbTint="@color/switch_thumb_selector" app:trackTint="@color/switch_track_selector" android:checked="true" android:minHeight="52dp" android:textSize="15sp" android:background="?attr/selectableItemBackground" android:paddingVertical="8dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_stroke_subtle" android:importantForAccessibility="no" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchSMS" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/filter_sms" android:textColor="@color/text_primary" app:useMaterialThemeColors="false" app:thumbTint="@color/switch_thumb_selector" app:trackTint="@color/switch_track_selector" android:checked="true" android:minHeight="52dp" android:textSize="15sp" android:background="?attr/selectableItemBackground" android:paddingVertical="8dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/card_stroke_subtle" android:importantForAccessibility="no" />
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchIG" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/filter_ig" android:textColor="@color/text_primary" app:useMaterialThemeColors="false" app:thumbTint="@color/switch_thumb_selector" app:trackTint="@color/switch_track_selector" android:checked="true" android:minHeight="52dp" android:textSize="15sp" android:background="?attr/selectableItemBackground" android:paddingVertical="8dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="20dp" android:layout_marginBottom="20dp" android:elevation="2dp" app:glassCornerRadius="22dp" app:glassTone="panel" android:id="@+id/layoutRecentActivity">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/title_recent_activity" android:textColor="@color/text_primary" android:textSize="17sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" app:fontFamily="@font/plus_jakarta_sans" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/logs_empty" android:textColor="@color/text_secondary" android:textSize="14sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="12dp" android:id="@+id/tvRecentMessage" app:fontFamily="@font/plus_jakarta_sans" android:maxLines="3" android:ellipsize="end" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="6dp" android:visibility="gone" android:id="@+id/tvRecentMeta" app:fontFamily="@font/plus_jakarta_sans" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnViewLogs" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/btn_view_activity" android:textSize="15sp" android:fontFamily="@font/plus_jakarta_sans" android:textAllCaps="false" android:textColor="@color/primary" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="14dp" app:backgroundTint="@color/glass_button" app:iconTint="@color/primary" android:layout_marginTop="14dp" app:fontFamily="@font/plus_jakarta_sans" />
+                </com.esp32.smartnotif.ui.GlassPanel>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-
-        <!-- Tab 2: Setting -->
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/layoutSetting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:clipToPadding="false"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="28dp">
-
-                <!-- Header Setting -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="16dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_settings"
-                        android:textColor="@color/text_primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/subtitle_settings"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp" />
+        <androidx.core.widget.NestedScrollView android:id="@+id/layoutTools" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:clipToPadding="false" android:visibility="gone" android:paddingBottom="112dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/page_gutter" android:paddingTop="24dp" android:paddingBottom="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/nav_tools" android:textColor="@color/text_primary" android:textSize="22sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/subtitle_tools" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="6dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                 </LinearLayout>
-
-                <!-- SEKSI 1: AKSES NOTIFIKASI & IZIN SISTEM (DI SETTING) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_notifications_active"
-                            app:tint="@color/primary"
-                            android:contentDescription="Izin Notifikasi" />
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/title_notif_access"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14.5sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvNotifStatusBadge"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/status_notif_inactive"
-                            android:textColor="@color/status_connecting"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="3dp"
-                            android:background="@drawable/bg_badge"
-                            android:backgroundTint="@color/card_stroke" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/desc_notif_access"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="11.5sp"
-                        android:layout_marginBottom="14dp" />
-
-                    <!-- Tombol Utama: Buka Pengaturan Akses Notifikasi -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMenuNotifAccess"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/btn_open_notif_access"
-                        android:textColor="@color/white"
-                        android:textSize="13.5sp"
-                        android:textStyle="bold"
-                        app:icon="@drawable/ic_notifications_active"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary"
-                        android:layout_marginBottom="14dp" />
-
-                    <!-- KOTAK PANDUAN KHUSUS SETELAN TERBATAS (ANDROID 13/14+) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_floating"
-                        android:elevation="1dp"
-                        android:padding="14dp"
-                        android:layout_marginBottom="12dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginBottom="6dp">
-
-                            <ImageView
-                                android:layout_width="16dp"
-                                android:layout_height="16dp"
-                                android:src="@drawable/ic_warning_amber"
-                                android:contentDescription="Perhatian" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="6dp"
-                                android:text="@string/title_restricted_settings"
-                                android:textColor="@color/status_connecting"
-                                android:textSize="11.5sp"
-                                android:textStyle="bold" />
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/send_idle" android:textColor="@color/text_secondary" android:textSize="14sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="0dp" android:accessibilityLiveRegion="polite" android:id="@+id/tvSendFeedback" app:fontFamily="@font/plus_jakarta_sans" android:layout_marginBottom="20dp" />
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_notifications_active" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_title_test_notif" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_sub_test_notif" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                         </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/desc_restricted_settings"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="10.5sp"
-                            android:lineSpacingExtra="2dp" />
                     </LinearLayout>
-
-                    <!-- Tombol Buka Info Aplikasi -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMenuAppInfo"
-                        android:layout_width="match_parent"
-                        android:layout_height="44dp"
-                        android:minHeight="44dp"
-                        android:text="@string/btn_open_app_info"
-                        android:textColor="@color/text_primary"
-                        android:textSize="12.5sp"
-                        app:icon="@drawable/ic_app_settings"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/text_primary"
-                        app:cornerRadius="14dp"
-                        app:strokeColor="@color/card_stroke"
-                        app:strokeWidth="1dp"
-                        app:backgroundTint="@color/card_bg_elevated"
-                        android:elevation="1dp" />
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_test_title" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp" app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp" app:boxBackgroundColor="@color/input_surface" app:boxStrokeColor="@color/input_stroke" app:hintTextColor="@color/text_secondary" android:textColorHint="@color/text_muted" style="@style/Widget.App.TextInputLayout" app:boxBackgroundMode="outline" app:boxStrokeWidth="1dp" app:boxStrokeWidthFocused="2dp">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTestSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="@string/sample_sender" android:maxLines="1" android:inputType="textCapSentences" android:minHeight="56dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="@string/hint_test_msg" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp" app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp" app:boxBackgroundColor="@color/input_surface" app:boxStrokeColor="@color/input_stroke" app:hintTextColor="@color/text_secondary" android:textColorHint="@color/text_muted" style="@style/Widget.App.TextInputLayout" app:boxBackgroundMode="outline" app:boxStrokeWidth="1dp" app:boxStrokeWidthFocused="2dp">
+                        <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTestMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="@string/sample_message" android:minHeight="56dp" android:inputType="textCapSentences|textMultiLine" android:minLines="2" android:gravity="top|start" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnSendTest" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="@string/btn_send_test" android:textColor="@color/button_foreground" android:textSize="14sp" app:icon="@drawable/ic_send" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="0dp" android:id="@+id/headerTime" android:minHeight="56dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_time" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_title_test_time" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_sub_test_time" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </LinearLayout>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/chevronTime" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="8dp" android:src="@drawable/ic_expand" android:importantForAccessibility="no" />
+                    </LinearLayout>
+                    <LinearLayout android:id="@+id/detailsTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" android:layout_marginTop="16dp">
+                        <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="0dp" android:padding="12dp" android:layout_marginBottom="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_time_battery_payload" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:id="@+id/tvTimeBatteryPreview" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="[TIME] --:--:--|--/--/----|--|--%" android:textColor="@color/text_primary" android:textSize="14sp" android:fontFamily="monospace" android:textStyle="bold" android:layout_marginTop="4dp" android:lineSpacingExtra="3dp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_time_battery" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="4dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </com.esp32.smartnotif.ui.GlassPanel>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnTestSyncTime" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_send_time_battery" android:textColor="@color/button_foreground" android:textSize="14sp" app:icon="@drawable/ic_refresh" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    </LinearLayout>
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="0dp" android:id="@+id/headerWeather" android:minHeight="56dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_weather" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_title_test_weather" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_sub_test_weather" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </LinearLayout>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/chevronWeather" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="8dp" android:src="@drawable/ic_expand" android:importantForAccessibility="no" />
+                    </LinearLayout>
+                    <LinearLayout android:id="@+id/detailsWeather" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" android:layout_marginTop="16dp">
+                        <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="0dp" android:padding="12dp" android:layout_marginBottom="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_weather_payload" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:id="@+id/tvWeatherPreview" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="[WEATHER] Jakarta|30|1|33|24|6|1012" android:textColor="@color/text_primary" android:textSize="14sp" android:fontFamily="monospace" android:textStyle="bold" android:layout_marginTop="4dp" android:lineSpacingExtra="3dp" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_weather" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="4dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </com.esp32.smartnotif.ui.GlassPanel>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnTestSyncWeather" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_send_weather_live" android:textColor="@color/button_foreground" android:textSize="14sp" app:icon="@drawable/ic_refresh" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnTestSampleWeather" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="8dp" android:text="@string/btn_send_weather_sample" android:textColor="@color/text_primary" android:textSize="14sp" app:icon="@drawable/ic_send" app:iconTint="@color/text_primary" app:iconGravity="textStart" app:cornerRadius="14dp" app:strokeColor="@color/card_stroke" app:strokeWidth="1dp" app:backgroundTint="@color/glass_button" android:elevation="1dp" android:insetTop="0dp" android:insetBottom="0dp" android:textAllCaps="false" android:paddingVertical="12dp" app:rippleColor="@color/ripple" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    </LinearLayout>
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="0dp" android:id="@+id/headerNav" android:minHeight="56dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_navigation" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:layout_marginStart="8dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_title_test_nav" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/panel_sub_test_nav" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </LinearLayout>
+                        <androidx.appcompat.widget.AppCompatImageView android:id="@+id/chevronNav" android:layout_width="24dp" android:layout_height="24dp" android:layout_marginStart="8dp" android:src="@drawable/ic_expand" android:importantForAccessibility="no" />
+                    </LinearLayout>
+                    <LinearLayout android:id="@+id/detailsNav" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" android:layout_marginTop="16dp">
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_nav_instruction" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp" app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp" app:boxBackgroundColor="@color/input_surface" app:boxStrokeColor="@color/input_stroke" app:hintTextColor="@color/text_secondary" android:textColorHint="@color/text_muted" style="@style/Widget.App.TextInputLayout" app:boxBackgroundMode="outline" app:boxStrokeWidth="1dp" app:boxStrokeWidthFocused="2dp">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNavInstruction" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="@string/sample_nav_instruction" android:maxLines="1" android:inputType="textCapSentences" android:minHeight="56dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="10dp">
+                            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_nav_distance" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp" app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp" app:boxBackgroundColor="@color/input_surface" app:boxStrokeColor="@color/input_stroke" app:hintTextColor="@color/text_secondary" android:textColorHint="@color/text_muted" style="@style/Widget.App.TextInputLayout" app:boxBackgroundMode="outline" app:boxStrokeWidth="1dp" app:boxStrokeWidthFocused="2dp">
+                                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNavDistance" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="@string/sample_nav_distance" android:maxLines="1" android:inputType="textCapSentences" android:minHeight="56dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/hint_nav_eta" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusTopEnd="16dp" app:boxCornerRadiusBottomStart="16dp" app:boxCornerRadiusBottomEnd="16dp" app:boxBackgroundColor="@color/input_surface" app:boxStrokeColor="@color/input_stroke" app:hintTextColor="@color/text_secondary" android:textColorHint="@color/text_muted" style="@style/Widget.App.TextInputLayout" app:boxBackgroundMode="outline" app:boxStrokeWidth="1dp" app:boxStrokeWidthFocused="2dp" android:layout_marginTop="12dp">
+                                <com.google.android.material.textfield.TextInputEditText android:id="@+id/etNavEta" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="@string/sample_nav_eta" android:maxLines="1" android:inputType="textCapSentences" android:minHeight="56dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                        <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="0dp" android:padding="12dp" android:layout_marginTop="10dp" android:layout_marginBottom="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_nav_preview" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:id="@+id/tvNavPreview" android:layout_width="match_parent" android:layout_height="wrap_content" tools:text="[NAV] Belok Kanan Jl. Sudirman|200 m|15 mnt|1" android:textColor="@color/text_primary" android:textSize="14sp" android:fontFamily="monospace" android:textStyle="bold" android:layout_marginTop="4dp" android:lineSpacingExtra="3dp" />
+                        </com.esp32.smartnotif.ui.GlassPanel>
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnTestNav" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_send_nav" android:textColor="@color/button_foreground" android:textSize="14sp" app:icon="@drawable/ic_navigation" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnTestNavStop" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="8dp" android:text="@string/btn_stop_nav" android:textColor="@color/status_disconnected" android:textSize="14sp" app:icon="@drawable/ic_stop" app:iconTint="@color/status_disconnected" app:iconGravity="textStart" app:cornerRadius="14dp" app:strokeColor="@color/status_disconnected" app:strokeWidth="1dp" app:backgroundTint="@color/glass_button" android:elevation="1dp" android:insetTop="0dp" android:insetBottom="0dp" android:textAllCaps="false" android:paddingVertical="12dp" app:rippleColor="@color/ripple" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    </LinearLayout>
+                </com.esp32.smartnotif.ui.GlassPanel>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+        <androidx.core.widget.NestedScrollView android:id="@+id/layoutSetting" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:clipToPadding="false" android:visibility="gone" android:paddingBottom="112dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/page_gutter" android:paddingTop="24dp" android:paddingBottom="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_settings" android:textColor="@color/text_primary" android:textSize="22sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/subtitle_settings" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="6dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                 </LinearLayout>
-
-                <!-- SEKSI 2: KONEKSI BLUETOOTH & DEVICE INFO -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/bg_card"
-                    android:elevation="0dp"
-                    android:padding="18dp"
-                    android:layout_marginBottom="16dp">
-
-                    <!-- Header Seksi Bluetooth -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="6dp">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:src="@drawable/ic_bluetooth"
-                            app:tint="@color/primary"
-                            android:contentDescription="Bluetooth ESP32" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/title_ble_section"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14.5sp"
-                            android:textStyle="bold" />
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:padding="20dp" android:layout_marginBottom="16dp" android:elevation="2dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_bluetooth" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="@string/title_background_service" android:textSize="16sp" android:textColor="@color/text_primary" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/desc_ble_section"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="11.5sp"
-                        android:layout_marginBottom="14dp" />
-
-                    <!-- KOTAK STATUS PERANGKAT SAAT INI (FLOATING WHITE) -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_floating"
-                        android:elevation="1dp"
-                        android:padding="16dp"
-                        android:layout_marginBottom="14dp">
-
-                        <!-- BARIS STATUS & INFO PERANGKAT -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <View
-                                android:id="@+id/viewSettingBleDot"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:background="@drawable/bg_badge"
-                                android:backgroundTint="@color/status_disconnected" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="10dp"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tvSettingDeviceName"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/status_no_device"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/tvSettingDeviceAddress"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/desc_start_scan_prompt"
-                                    android:textColor="@color/text_secondary"
-                                    android:textSize="11sp"
-                                    android:layout_marginTop="2dp" />
+                    <TextView android:id="@+id/tvServiceStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/service_inactive" android:textColor="@color/text_secondary" android:textSize="14sp" android:accessibilityLiveRegion="polite" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/desc_background_service" android:textColor="@color/text_secondary" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnToggleService" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="16dp" android:text="@string/btn_start_service" android:textAllCaps="false" android:textColor="@color/button_foreground" android:textSize="14sp" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:icon="@drawable/ic_play" app:iconTint="@color/button_foreground" app:iconGravity="textStart" app:backgroundTint="@color/button_fill" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" app:cornerRadius="14dp" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_notifications_active" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="8dp" android:text="@string/title_notif_access" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/tvNotifStatusBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_notif_inactive" android:textColor="@color/status_connecting" android:textSize="14sp" android:paddingHorizontal="10dp" android:paddingVertical="6dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/primary_container" android:lineSpacingExtra="3dp" android:layout_marginTop="8dp" android:layout_marginBottom="12dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_notif_access" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginBottom="14dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnMenuNotifAccess" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_open_notif_access" android:textColor="@color/button_foreground" android:textSize="14sp" app:icon="@drawable/ic_notifications_active" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:layout_marginBottom="14dp" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="0dp" android:padding="14dp" android:layout_marginBottom="12dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="6dp" android:id="@+id/headerHelp" android:minHeight="48dp" android:clickable="true" android:focusable="true" android:background="?attr/selectableItemBackground">
+                            <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_warning_amber" android:importantForAccessibility="no" app:tint="@color/primary" />
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="6dp" android:text="@string/title_restricted_settings" android:textColor="@color/status_connecting" android:textSize="14sp" android:lineSpacingExtra="3dp" android:layout_weight="1" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/chevronHelp" android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_expand" android:importantForAccessibility="no" />
+                        </LinearLayout>
+                        <LinearLayout android:id="@+id/detailsHelp" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" android:layout_marginTop="12dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_restricted_settings" android:textColor="@color/text_secondary" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                        </LinearLayout>
+                    </com.esp32.smartnotif.ui.GlassPanel>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnMenuAppInfo" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/btn_open_app_info" android:textColor="@color/text_primary" android:textSize="14sp" app:icon="@drawable/ic_app_settings" app:iconGravity="textStart" app:iconTint="@color/text_primary" app:cornerRadius="14dp" app:strokeColor="@color/card_stroke" app:strokeWidth="1dp" app:backgroundTint="@color/glass_button" android:elevation="1dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp" android:id="@+id/panelBluetooth">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="6dp">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/ic_bluetooth" app:tint="@color/primary" android:importantForAccessibility="no" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/title_ble_section" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:layout_weight="1" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_ble_section" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginBottom="14dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="0dp" android:padding="16dp" android:layout_marginBottom="14dp">
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+                            <View android:id="@+id/viewSettingBleDot" android:layout_width="10dp" android:layout_height="10dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/status_disconnected" android:importantForAccessibility="no" />
+                            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:orientation="vertical">
+                                <TextView android:id="@+id/tvSettingDeviceName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_no_device" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                                <TextView android:id="@+id/tvSettingDeviceAddress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_start_scan_prompt" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="2dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                             </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tvSettingBleBadge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/badge_disconnected"
-                                android:textColor="@color/status_disconnected"
-                                android:textSize="11sp"
-                                android:textStyle="bold"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="3dp"
-                                android:background="@drawable/bg_badge"
-                                android:backgroundTint="@color/card_stroke" />
                         </LinearLayout>
-
-                        <!-- TOMBOL UTAMA: PUTUSKAN KONEKSI BLUETOOTH -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnDisconnectBle"
-                            android:layout_width="match_parent"
-                            android:layout_height="44dp"
-                            android:minHeight="44dp"
-                            android:layout_marginTop="12dp"
-                            android:text="@string/btn_disconnect_ble"
-                            android:textColor="@color/status_disconnected"
-                            android:textSize="12.5sp"
-                            android:textStyle="bold"
-                            app:icon="@drawable/ic_bluetooth_disabled"
-                            app:iconGravity="textStart"
-                            app:iconTint="@color/status_disconnected"
-                            app:iconSize="18dp"
-                            app:cornerRadius="12dp"
-                            app:strokeColor="@color/status_disconnected"
-                            app:strokeWidth="1.2dp"
-                            app:backgroundTint="@android:color/transparent"
-                            android:visibility="gone" />
-
-                        <!-- CONTAINER KONTROL JIKA TERPUTUS NAMUN MEMILIKI PERANGKAT TERSIMPAN -->
-                        <LinearLayout
-                            android:id="@+id/layoutSavedDeviceActions"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginTop="12dp"
-                            android:visibility="gone">
-
-                            <!-- Tombol Hubungkan Kembali (Tap target minimal 44dp) -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnReconnectSavedBle"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:minHeight="44dp"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="6dp"
-                                android:text="@string/btn_reconnect_saved"
-                                android:textColor="@color/primary"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                app:icon="@drawable/ic_bluetooth"
-                                app:iconGravity="textStart"
-                                app:iconTint="@color/primary"
-                                app:iconSize="18dp"
-                                app:cornerRadius="12dp"
-                                app:strokeColor="@color/primary"
-                                app:strokeWidth="1.2dp"
-                                app:backgroundTint="@android:color/transparent" />
-
-                            <!-- Tombol Lupakan (Tap target minimal 44dp) -->
-                            <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnForgetSavedBle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="44dp"
-                                android:minHeight="44dp"
-                                android:text="@string/btn_forget_device"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="12sp"
-                                app:icon="@drawable/ic_delete"
-                                app:iconGravity="textStart"
-                                app:iconTint="@color/text_secondary"
-                                app:iconSize="18dp"
-                                app:cornerRadius="12dp"
-                                app:strokeColor="@color/card_stroke"
-                                app:strokeWidth="1dp"
-                                app:backgroundTint="@android:color/transparent" />
+                        <TextView android:id="@+id/tvSettingBleBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/badge_disconnected" android:textColor="@color/status_disconnected" android:textSize="14sp" android:paddingHorizontal="10dp" android:paddingVertical="6dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/primary_container" android:lineSpacingExtra="3dp" android:layout_marginTop="8dp" android:layout_marginBottom="12dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnDisconnectBle" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:layout_marginTop="12dp" android:text="@string/btn_disconnect_ble" android:textColor="@color/status_disconnected" android:textSize="14sp" app:icon="@drawable/ic_bluetooth_disabled" app:iconGravity="textStart" app:iconTint="@color/status_disconnected" app:iconSize="18dp" app:cornerRadius="14dp" app:strokeColor="@color/status_disconnected" app:strokeWidth="1.2dp" app:backgroundTint="@android:color/transparent" android:visibility="gone" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                        <LinearLayout android:id="@+id/layoutSavedDeviceActions" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginTop="12dp" android:visibility="gone">
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnReconnectSavedBle" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/btn_reconnect_saved" android:textColor="@color/on_primary_container" android:textSize="14sp" app:icon="@drawable/ic_bluetooth" app:iconGravity="textStart" app:iconTint="@color/on_primary_container" app:iconSize="18dp" app:cornerRadius="14dp" app:strokeColor="@color/input_stroke" app:strokeWidth="1.2dp" app:backgroundTint="@android:color/transparent" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <com.google.android.material.button.MaterialButton android:id="@+id/btnForgetSavedBle" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/btn_forget_device" android:textColor="@color/text_secondary" android:textSize="14sp" app:icon="@drawable/ic_delete" app:iconGravity="textStart" app:iconTint="@color/text_secondary" app:iconSize="18dp" app:cornerRadius="14dp" app:strokeColor="@color/card_stroke" app:strokeWidth="1dp" app:backgroundTint="@android:color/transparent" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" android:layout_marginTop="8dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                         </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- SWITCH FILTER KHUSUS ESP32 -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="12dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/title_filter_esp_only"
-                                android:textColor="@color/text_primary"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/desc_filter_esp_only"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="10.5sp" />
+                    </com.esp32.smartnotif.ui.GlassPanel>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_filter_esp_only" android:textColor="@color/text_primary" android:textSize="16sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_filter_esp_only" android:textColor="@color/text_secondary" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                         </LinearLayout>
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchFilterEspOnly"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:useMaterialThemeColors="false"
-                            app:thumbTint="@color/switch_thumb_selector"
-                            app:trackTint="@color/switch_track_selector"
-                            android:checked="true" />
+                        <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchFilterEspOnly" android:layout_width="wrap_content" android:layout_height="wrap_content" app:useMaterialThemeColors="false" app:thumbTint="@color/switch_thumb_selector" app:trackTint="@color/switch_track_selector" android:checked="true" android:minHeight="56dp" android:textSize="16sp" android:background="?attr/selectableItemBackground" android:paddingVertical="8dp" android:contentDescription="@string/title_filter_esp_only" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                     </LinearLayout>
-
-                    <!-- TOMBOL MULAI PINDAI -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnMenuRescanBle"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/btn_start_scan"
-                        android:textSize="13.5sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        app:icon="@drawable/ic_refresh"
-                        app:iconGravity="textStart"
-                        app:cornerRadius="14dp"
-                        app:backgroundTint="@color/primary"
-                        android:layout_marginBottom="10dp" />
-
-                    <!-- PROGRESS BAR PEMINDAIAN -->
-                    <com.google.android.material.progressindicator.LinearProgressIndicator
-                        android:id="@+id/pbScanLoading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:indeterminate="true"
-                        app:indicatorColor="@color/primary"
-                        app:trackColor="@color/card_stroke"
-                        android:visibility="gone"
-                        android:layout_marginBottom="8dp" />
-
-                    <TextView
-                        android:id="@+id/tvScanStatusInfo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/desc_scanning_progress"
-                        android:textColor="@color/status_connecting"
-                        android:textSize="11sp"
-                        android:visibility="gone"
-                        android:layout_marginBottom="10dp" />
-
-                    <!-- LABEL DAFTAR PERANGKAT TERSEDIA -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_available_devices"
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="8dp" />
-
-                    <!-- EMPTY STATE -->
-                    <LinearLayout
-                        android:id="@+id/layoutEmptyBleDevices"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="center"
-                        android:paddingVertical="20dp"
-                        android:visibility="visible">
-
-                        <ImageView
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_bluetooth"
-                            app:tint="@color/text_muted"
-                            android:alpha="0.4"
-                            android:contentDescription="No Devices" />
-
-                        <TextView
-                            android:id="@+id/tvEmptyBleDevicesMsg"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/empty_ble_devices_msg"
-                            android:textColor="@color/text_muted"
-                            android:textSize="11.5sp"
-                            android:textAlignment="center"
-                            android:layout_marginTop="8dp"
-                            android:lineSpacingExtra="2dp" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnMenuRescanBle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/btn_start_scan" android:textSize="14sp" android:textColor="@color/button_foreground" app:icon="@drawable/ic_refresh" app:iconGravity="textStart" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:layout_marginBottom="10dp" android:minHeight="52dp" android:textAllCaps="false" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:rippleColor="@color/ripple" app:iconTint="@color/button_foreground" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/pbScanLoading" android:layout_width="match_parent" android:layout_height="wrap_content" android:indeterminate="true" app:indicatorColor="@color/primary" app:trackColor="@color/card_stroke" android:visibility="gone" android:layout_marginBottom="8dp" />
+                    <TextView android:id="@+id/tvScanStatusInfo" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/desc_scanning_progress" android:textColor="@color/status_connecting" android:textSize="14sp" android:visibility="gone" android:layout_marginBottom="10dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_available_devices" android:textColor="@color/text_muted" android:textSize="14sp" android:layout_marginTop="4dp" android:layout_marginBottom="8dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <LinearLayout android:id="@+id/layoutEmptyBleDevices" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:paddingVertical="20dp" android:visibility="visible">
+                        <androidx.appcompat.widget.AppCompatImageView android:layout_width="32dp" android:layout_height="32dp" android:src="@drawable/ic_bluetooth" app:tint="@color/primary" android:alpha="0.4" android:importantForAccessibility="no" />
+                        <TextView android:id="@+id/tvEmptyBleDevicesMsg" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/empty_ble_devices_msg" android:textColor="@color/text_muted" android:textSize="14sp" android:textAlignment="center" android:layout_marginTop="8dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
                     </LinearLayout>
-
-                    <!-- RECYCLERVIEW DAFTAR PERANGKAT BLE -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvBleDevices"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:visibility="gone" />
-
-                </LinearLayout>
-
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvBleDevices" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" android:visibility="gone" />
+                </com.esp32.smartnotif.ui.GlassPanel>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-
+        <androidx.core.widget.NestedScrollView android:id="@+id/layoutActivity" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:clipToPadding="false" android:visibility="gone" android:paddingBottom="112dp">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingHorizontal="@dimen/page_gutter" android:paddingTop="24dp" android:paddingBottom="24dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:layout_marginBottom="18dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/title_live_logs" android:textColor="@color/text_primary" android:textSize="22sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/subtitle_activity" android:textColor="@color/text_secondary" android:textSize="14sp" android:layout_marginTop="6dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                </LinearLayout>
+                <com.google.android.material.button.MaterialButton android:id="@+id/btnBackActivity" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:text="@string/btn_back_home" android:textSize="15sp" android:fontFamily="@font/plus_jakarta_sans" android:textAllCaps="false" android:textColor="@color/primary" android:paddingVertical="12dp" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="14dp" app:backgroundTint="@color/glass_button" app:iconTint="@color/primary" app:icon="@drawable/ic_arrow_back" android:layout_marginBottom="20dp" app:fontFamily="@font/plus_jakarta_sans" />
+                <com.esp32.smartnotif.ui.GlassPanel android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card" app:glassCornerRadius="22dp" app:glassTone="panel" android:elevation="2dp" android:padding="20dp" android:layout_marginBottom="16dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="8dp">
+                        <TextView android:id="@+id/tvLogsTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/title_live_logs" android:textColor="@color/text_muted" android:textSize="14sp" android:lineSpacingExtra="3dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnClearLogs" style="@style/Widget.Material3.Button.TextButton" android:layout_width="wrap_content" android:layout_height="wrap_content" android:minHeight="52dp" android:minWidth="48dp" android:text="@string/btn_clear_logs" android:textColor="@color/text_secondary" android:textSize="14sp" app:icon="@drawable/ic_delete" app:iconSize="14dp" app:iconTint="@color/text_secondary" android:paddingHorizontal="8dp" android:paddingVertical="12dp" android:textAllCaps="false" android:insetTop="0dp" android:insetBottom="0dp" app:cornerRadius="14dp" app:rippleColor="@color/ripple" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/tvEmptyLogs" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/logs_empty" android:textColor="@color/text_muted" android:textSize="14sp" android:gravity="center" android:padding="16dp" android:lineSpacingExtra="3dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+                    <androidx.recyclerview.widget.RecyclerView android:id="@+id/rvNotifLogs" android:layout_width="match_parent" android:layout_height="wrap_content" android:nestedScrollingEnabled="false" tools:listitem="@layout/item_notif_log" />
+                </com.esp32.smartnotif.ui.GlassPanel>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </FrameLayout>
-
-    <!-- GARIS PEMISAH ATAS NAVBAR (ALA WHATSAPP) -->
-    <View
-        android:id="@+id/navDivider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        android:background="@color/card_stroke"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <!-- BOTTOM NAVIGATION BAR (NAVBAR DI BAWAH - PROPORSI RAMPING ALA WHATSAPP) -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        style="@style/Widget.App.BottomNavigationView"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/bottom_nav_height"
-        android:background="@color/card_bg"
-        app:elevation="0dp"
-        app:itemIconSize="@dimen/bottom_nav_icon_size"
-        app:itemIconTint="@color/nav_item_color"
-        app:itemTextColor="@color/nav_item_color"
-        app:itemPaddingTop="@dimen/bottom_nav_padding_top"
-        app:itemPaddingBottom="@dimen/bottom_nav_padding_bottom"
-        app:itemActiveIndicatorStyle="@style/Widget.App.BottomNavIndicator"
-        app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav.Inactive"
-        app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav.Active"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
+    <com.google.android.material.bottomnavigation.BottomNavigationView android:id="@+id/bottomNav" style="@style/Widget.App.BottomNavigationView" android:layout_width="0dp" android:layout_height="wrap_content" android:background="@drawable/bg_glass_nav" app:elevation="6dp" app:itemIconSize="@dimen/bottom_nav_icon_size" app:itemIconTint="@color/nav_item_color" app:itemTextColor="@color/nav_item_color" app:itemPaddingTop="@dimen/bottom_nav_padding_top" app:itemPaddingBottom="@dimen/bottom_nav_padding_bottom" app:itemActiveIndicatorStyle="@style/Widget.App.BottomNavIndicator" app:itemTextAppearanceInactive="@style/TextAppearance.App.BottomNav.Inactive" app:itemTextAppearanceActive="@style/TextAppearance.App.BottomNav.Active" app:labelVisibilityMode="labeled" app:menu="@menu/bottom_nav_menu" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent" android:layout_marginHorizontal="20dp" android:layout_marginBottom="12dp" android:minHeight="@dimen/bottom_nav_height" app:layout_constraintWidth_max="440dp" app:itemHorizontalTranslationEnabled="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>

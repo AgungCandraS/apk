@@ -1,24 +1,45 @@
+<?xml version='1.0' encoding='utf-8'?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme with Anti-gravity Minimalist Aesthetics. -->
     <style name="Theme.ESP32SmartNotif" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryVariant">@color/primary_variant</item>
         <item name="colorSecondary">@color/secondary</item>
-        <item name="android:statusBarColor">@color/background</item>
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorSurface">@color/card_bg_elevated</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnSurfaceVariant">@color/text_secondary</item>
+        <item name="colorOutline">@color/input_stroke</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
+        <item name="materialButtonStyle">@style/Widget.App.Button</item>
+        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>
+        <item name="android:statusBarColor">@color/canvas_top</item>
         <item name="android:windowBackground">@color/background</item>
-        <item name="android:navigationBarColor">@color/card_bg</item>
+        <item name="android:navigationBarColor">@color/canvas_fold_end</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-
-        <!-- Default BottomNavigationView style: compact and proportional like WhatsApp -->
         <item name="bottomNavigationStyle">@style/Widget.App.BottomNavigationView</item>
+        <item name="fontFamily">@font/plus_jakarta_sans</item>
+        <item name="colorError">@color/status_disconnected</item>
     </style>
-
-    <!-- WhatsApp-style Proportional Bottom Navigation Bar -->
+    <style name="Widget.App.Button" parent="Widget.Material3.Button">
+        <item name="android:minHeight">52dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/button_foreground</item>
+        <item name="backgroundTint">@color/button_fill</item>
+        <item name="iconTint">@color/button_foreground</item>
+        <item name="cornerRadius">14dp</item>
+        <item name="rippleColor">@color/ripple</item>
+    </style>
+    <style name="Widget.App.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/input_surface</item>
+        <item name="boxStrokeColor">@color/input_stroke</item>
+        <item name="hintTextColor">@color/text_secondary</item>
+    </style>
     <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="android:background">@color/card_bg</item>
+        <item name="android:background">@drawable/bg_glass_nav</item>
         <item name="android:minHeight">@dimen/bottom_nav_height</item>
-        <item name="elevation">0dp</item>
+        <item name="elevation">6dp</item>
         <item name="itemIconSize">@dimen/bottom_nav_icon_size</item>
         <item name="itemIconTint">@color/nav_item_color</item>
         <item name="itemTextColor">@color/nav_item_color</item>
@@ -29,26 +50,20 @@
         <item name="itemTextAppearanceActive">@style/TextAppearance.App.BottomNav.Active</item>
         <item name="itemActiveIndicatorStyle">@style/Widget.App.BottomNavIndicator</item>
     </style>
-
-    <!-- Sleek & compact active pill indicator (Ala WhatsApp Material You) -->
     <style name="Widget.App.BottomNavIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:width">@dimen/bottom_nav_indicator_width</item>
         <item name="android:height">@dimen/bottom_nav_indicator_height</item>
         <item name="android:color">@color/primary_container</item>
     </style>
-
-    <!-- Bottom Nav Inactive Typography -->
     <style name="TextAppearance.App.BottomNav.Inactive" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textSize">@dimen/bottom_nav_text_size</item>
-        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
         <item name="android:textStyle">normal</item>
         <item name="android:letterSpacing">0.01</item>
     </style>
-
-    <!-- Bottom Nav Active Typography (Bold, crisp) -->
     <style name="TextAppearance.App.BottomNav.Active" parent="TextAppearance.Material3.LabelSmall">
         <item name="android:textSize">@dimen/bottom_nav_text_size</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:fontFamily">@font/plus_jakarta_sans</item>
         <item name="android:textStyle">bold</item>
         <item name="android:letterSpacing">0.01</item>
     </style>

@@ -1,0 +1,10 @@
+<resources>
+    <declare-styleable name="GlassPanel">
+        <attr name="glassCornerRadius" format="dimension" />
+        <attr name="glassTone" format="enum">
+            <enum name="panel" value="0" />
+            <enum name="inset" value="1" />
+            <enum name="hero" value="2" />
+        </attr>
+    </declare-styleable>
+</resources>

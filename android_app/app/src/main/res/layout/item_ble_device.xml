@@ -1,127 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/bg_card_floating"
-    android:elevation="2dp"
-    android:padding="14dp"
-    android:gravity="center_vertical"
-    android:layout_marginBottom="10dp">
-
-    <!-- Icon Perangkat -->
-    <FrameLayout
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_badge"
-        android:backgroundTint="@color/card_stroke_subtle">
-
-        <ImageView
-            android:id="@+id/ivDeviceIcon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_bluetooth"
-            app:tint="@color/primary"
-            android:contentDescription="Bluetooth Device" />
-    </FrameLayout>
-
-    <!-- Info Perangkat -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="vertical">
-
-        <!-- Baris Nama & Badge ESP32 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:id="@+id/tvDeviceName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="ESP32-SmartNotif" />
-
-            <TextView
-                android:id="@+id/tvEspBadge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
-                android:text="@string/badge_esp32_c3"
-                android:textColor="@color/white"
-                android:textSize="9.5sp"
-                android:textStyle="bold"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="2dp"
-                android:background="@drawable/bg_badge"
-                android:backgroundTint="@color/secondary"
-                android:visibility="visible" />
+<?xml version='1.0' encoding='utf-8'?>
+<com.esp32.smartnotif.ui.GlassPanel xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:padding="16dp" android:gravity="center_vertical" android:layout_marginBottom="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <FrameLayout android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/bg_glass_icon">
+            <androidx.appcompat.widget.AppCompatImageView android:id="@+id/ivDeviceIcon" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="center" android:src="@drawable/ic_bluetooth" app:tint="@color/primary" android:importantForAccessibility="no" />
+        </FrameLayout>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="12dp" android:layout_marginEnd="0dp" android:orientation="vertical">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_vertical">
+                <TextView android:id="@+id/tvDeviceName" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_primary" android:textSize="16sp" tools:text="ESP32-SmartNotif" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+                <TextView android:id="@+id/tvEspBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="0dp" android:text="@string/badge_esp32_c3" android:textColor="@color/on_primary_container" android:textSize="12sp" android:paddingHorizontal="8dp" android:paddingVertical="2dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/primary_container" android:visibility="visible" android:layout_marginTop="8dp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center_vertical" android:layout_marginTop="3dp">
+                <TextView android:id="@+id/tvDeviceAddress" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="monospace" tools:text="AA:BB:CC:11:22:33" />
+                <TextView android:id="@+id/tvDeviceRssi" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@color/text_secondary" android:textSize="12sp" tools:text="-65 dBm" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+            </LinearLayout>
         </LinearLayout>
-
-        <!-- Baris MAC & RSSI -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="3dp">
-
-            <TextView
-                android:id="@+id/tvDeviceAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_muted"
-                android:textSize="11sp"
-                android:fontFamily="monospace"
-                tools:text="AA:BB:CC:11:22:33" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" • "
-                android:textColor="@color/text_muted"
-                android:textSize="11sp" />
-
-            <TextView
-                android:id="@+id/tvDeviceRssi"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp"
-                tools:text="-65 dBm" />
-        </LinearLayout>
-
     </LinearLayout>
-
-    <!-- Tombol Hubungkan / Status Terhubung (Tap target minimal 44dp) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnConnectDevice"
-        android:layout_width="wrap_content"
-        android:layout_height="44dp"
-        android:minHeight="44dp"
-        android:paddingHorizontal="14dp"
-        android:paddingVertical="0dp"
-        android:text="@string/btn_connect"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        app:cornerRadius="12dp"
-        app:backgroundTint="@color/primary"
-        android:insetTop="0dp"
-        android:insetBottom="0dp" />
-
-</LinearLayout>
+    <com.google.android.material.button.MaterialButton android:id="@+id/btnConnectDevice" android:layout_width="match_parent" android:layout_height="wrap_content" android:minHeight="52dp" android:paddingHorizontal="14dp" android:paddingVertical="12dp" android:text="@string/btn_connect" android:textColor="@color/button_foreground" android:textSize="14sp" android:textStyle="bold" app:cornerRadius="14dp" app:backgroundTint="@color/button_fill" android:insetTop="0dp" android:insetBottom="0dp" android:layout_marginTop="12dp" android:textAllCaps="false" app:iconTint="@color/button_foreground" />
+</com.esp32.smartnotif.ui.GlassPanel>

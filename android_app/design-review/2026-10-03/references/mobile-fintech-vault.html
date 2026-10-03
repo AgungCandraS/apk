@@ -1,0 +1,140 @@
+<div class="w-full max-w-[375px] mx-auto bg-[#09090b] text-white rounded-[40px] border-[6px] border-zinc-800 p-5 shadow-2xl font-sans overflow-hidden min-h-[720px] flex flex-col justify-between">
+  <!-- Status Bar & Header -->
+  <div>
+    <div class="flex items-center justify-between text-xs text-zinc-400 mb-5 pt-2 px-1">
+      <span class="font-bold tracking-tight">09:41</span>
+      <div class="flex items-center gap-1.5 text-xs">
+        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-wifi"></i>
+        <i class="fa-solid fa-battery-full"></i>
+      </div>
+    </div>
+
+    <!-- User & Notifications -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-zinc-700 to-zinc-900 border border-zinc-700 flex items-center justify-center font-bold text-sm text-zinc-200">
+          JD
+        </div>
+        <div>
+          <div class="text-[11px] text-zinc-500 font-medium tracking-wide uppercase">Private Vault</div>
+          <div class="text-sm font-bold text-zinc-100">Julian Drake</div>
+        </div>
+      </div>
+      <button class="w-9 h-9 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-300 hover:text-white transition">
+        <i class="fa-regular fa-bell text-xs"></i>
+      </button>
+    </div>
+
+    <!-- Balance Section -->
+    <div class="mb-5">
+      <div class="text-xs text-zinc-400 font-medium flex items-center gap-2 mb-1">
+        <span>Total Net Assets</span>
+        <span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">+14.2% YTD</span>
+      </div>
+      <div class="text-3xl font-black tracking-tight text-zinc-50">$128,450<span class="text-zinc-500 text-xl font-medium">.80</span></div>
+    </div>
+
+    <!-- Obsidian Tactile Card Preview -->
+    <div class="relative bg-gradient-to-br from-zinc-900 via-zinc-900 to-black rounded-2xl p-5 border border-zinc-800 shadow-lg mb-6 overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-emerald-500/5 blur-2xl pointer-events-none"></div>
+      <div class="flex items-center justify-between mb-8">
+        <div class="w-8 h-6 rounded bg-amber-400/20 border border-amber-400/40 flex items-center justify-center">
+          <div class="w-4 h-3 border-t border-b border-amber-400/60"></div>
+        </div>
+        <div class="text-xs font-mono tracking-widest text-zinc-400">BLACK METAL</div>
+      </div>
+      <div class="text-sm font-mono tracking-widest text-zinc-300 mb-4">•••• •••• •••• 8829</div>
+      <div class="flex items-center justify-between text-xs text-zinc-400">
+        <div>
+          <span class="text-[9px] uppercase tracking-wider block text-zinc-500">Cardholder</span>
+          <span class="font-medium text-zinc-200">JULIAN DRAKE</span>
+        </div>
+        <div class="text-right">
+          <span class="text-[9px] uppercase tracking-wider block text-zinc-500">Expires</span>
+          <span class="font-mono text-zinc-200">09/29</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Dock -->
+    <div class="grid grid-cols-4 gap-2 mb-6">
+      <button class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl p-3 flex flex-col items-center gap-1.5 transition group">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-200 group-hover:text-emerald-400 transition">
+          <i class="fa-solid fa-arrow-up-right text-xs"></i>
+        </div>
+        <span class="text-[10px] font-semibold text-zinc-400">Send</span>
+      </button>
+
+      <button class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl p-3 flex flex-col items-center gap-1.5 transition group">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-200 group-hover:text-emerald-400 transition">
+          <i class="fa-solid fa-arrow-down-left text-xs"></i>
+        </div>
+        <span class="text-[10px] font-semibold text-zinc-400">Receive</span>
+      </button>
+
+      <button class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl p-3 flex flex-col items-center gap-1.5 transition group">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-200 group-hover:text-emerald-400 transition">
+          <i class="fa-solid fa-plus text-xs"></i>
+        </div>
+        <span class="text-[10px] font-semibold text-zinc-400">Deposit</span>
+      </button>
+
+      <button class="bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-xl p-3 flex flex-col items-center gap-1.5 transition group">
+        <div class="w-8 h-8 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-200 group-hover:text-emerald-400 transition">
+          <i class="fa-solid fa-chart-pie text-xs"></i>
+        </div>
+        <span class="text-[10px] font-semibold text-zinc-400">Analytics</span>
+      </button>
+    </div>
+
+    <!-- Recent Transactions Header -->
+    <div class="flex items-center justify-between mb-3 px-1">
+      <span class="text-xs font-bold text-zinc-200 tracking-wide uppercase">Recent Transactions</span>
+      <span class="text-xs text-zinc-500 hover:text-zinc-300 cursor-pointer">View All</span>
+    </div>
+
+    <!-- Transactions List -->
+    <div class="space-y-2.5">
+      <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 transition">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-zinc-900 flex items-center justify-center text-zinc-300">
+            <i class="fa-brands fa-apple text-sm"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-zinc-200">Apple Store Regent St</div>
+            <div class="text-[10px] text-zinc-500">Hardware • 14:20</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs font-mono font-bold text-zinc-100">-$1,299.00</div>
+          <div class="text-[10px] text-zinc-500">Cleared</div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between p-3 rounded-xl bg-zinc-950 border border-zinc-800/80 hover:border-zinc-700 transition">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+            <i class="fa-solid fa-arrow-down-left text-sm"></i>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-zinc-200">Stripe Wire Payout</div>
+            <div class="text-[10px] text-zinc-500">Revenue • Today 09:12</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="text-xs font-mono font-bold text-emerald-400">+$8,450.00</div>
+          <div class="text-[10px] text-emerald-500/70 font-medium">Completed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <div class="pt-4 mt-4 border-t border-zinc-900 flex items-center justify-around text-zinc-500 text-sm">
+    <button class="text-emerald-400 flex flex-col items-center gap-1"><i class="fa-solid fa-wallet"></i><span class="text-[9px] font-bold">Vault</span></button>
+    <button class="hover:text-zinc-300 flex flex-col items-center gap-1"><i class="fa-solid fa-chart-line"></i><span class="text-[9px]">Markets</span></button>
+    <button class="hover:text-zinc-300 flex flex-col items-center gap-1"><i class="fa-solid fa-credit-card"></i><span class="text-[9px]">Cards</span></button>
+    <button class="hover:text-zinc-300 flex flex-col items-center gap-1"><i class="fa-solid fa-gear"></i><span class="text-[9px]">Settings</span></button>
+  </div>
+</div>

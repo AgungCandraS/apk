@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
+import android.animation.ValueAnimator
 import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
@@ -12,9 +13,11 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +30,7 @@ import com.esp32.smartnotif.service.NotificationReceiverService
 import com.esp32.smartnotif.service.WeatherWorker
 import com.esp32.smartnotif.ui.BleDeviceAdapter
 import com.esp32.smartnotif.ui.LogAdapter
+import com.esp32.smartnotif.ui.GlassSurfaceDrawable
 import com.esp32.smartnotif.utils.AppFilterManager
 import com.esp32.smartnotif.utils.DeviceSyncHelper
 import com.esp32.smartnotif.utils.PermissionHelper
@@ -40,7 +44,9 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
 
     companion object {
         private const val TAB_MENU = 0
-        private const val TAB_SETTING = 1
+        private const val TAB_TOOLS = 1
+        private const val TAB_SETTING = 2
+        private const val TAB_ACTIVITY = 3
         private const val SWIPE_THRESHOLD_DP = 48
         private const val SWIPE_VELOCITY_THRESHOLD_DP = 140
     }
@@ -52,8 +58,14 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
     private lateinit var bleDeviceAdapter: BleDeviceAdapter
 
     private var currentTab = TAB_MENU
+    private var updatingNavigation = false
+    private val activityBack = object : OnBackPressedCallback(false) {
+        override fun handleOnBackPressed() = switchToMenu()
+    }
     private var startTouchX = 0f
     private var startTouchY = 0f
+    private var startServiceAfterPermission = false
+    private var startScanAfterPermission = false
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -61,15 +73,27 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         val allGranted = permissions.entries.all { it.value }
         if (allGranted) {
             Toast.makeText(this, "Izin Bluetooth aktif", Toast.LENGTH_SHORT).show()
-            bleManager.startScanAndConnect()
+            if (startServiceAfterPermission || BleForegroundService.isEnabled(this)) {
+                startBackgroundService()
+            }
+            if (startScanAfterPermission) {
+                bleManager.startDiscovery(binding.switchFilterEspOnly.isChecked)
+            }
         } else {
             Toast.makeText(this, "Izin diperlukan untuk menghubungkan ke ESP32", Toast.LENGTH_LONG).show()
         }
+        startServiceAfterPermission = false
+        startScanAfterPermission = false
+        updateServiceControls()
     }
 
     // Receiver untuk menerima update log notifikasi secara langsung dari service
     private val logBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == BleForegroundService.ACTION_STATE_CHANGED) {
+                updateServiceControls()
+                return
+            }
             if (intent?.action == NotificationReceiverService.ACTION_NEW_NOTIF_LOG) {
                 val appCode = intent.getStringExtra(NotificationReceiverService.EXTRA_APP_CODE) ?: "NOTIF"
                 val sender = intent.getStringExtra(NotificationReceiverService.EXTRA_SENDER) ?: ""
@@ -86,22 +110,67 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        GlassSurfaceDrawable.install(binding.bottomNav, 22 * resources.displayMetrics.density, tone = 3)
+        startServiceAfterPermission = savedInstanceState?.getBoolean("start_service_after_permission") == true
+        startScanAfterPermission = savedInstanceState?.getBoolean("start_scan_after_permission") == true
 
         bleManager = BleManager.getInstance(this)
         appFilterManager = AppFilterManager(this)
 
         setupUI()
         setupListeners()
+        setupExpandablePanels(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, activityBack)
+        switchTab(savedInstanceState?.getInt("selected_tab") ?: TAB_MENU, animated = false)
         checkAndRequestPermissions()
 
         // Jadwalkan update cuaca berkala setiap 30-45 menit via WorkManager
         WeatherWorker.schedulePeriodicWork(this)
 
-        // Jika sudah dalam kondisi terhubung, pastikan Foreground Service tetap berjalan aktif
-        if (bleManager.currentState == BleManager.ConnectionState.CONNECTED) {
-            BleForegroundService.startService(this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("selected_tab", currentTab)
+        outState.putBoolean("start_service_after_permission", startServiceAfterPermission)
+        outState.putBoolean("start_scan_after_permission", startScanAfterPermission)
+        listOf(binding.detailsTime, binding.detailsWeather, binding.detailsNav, binding.detailsHelp).forEach { panel ->
+            outState.putBoolean("panel_${panel.id}", panel.visibility == View.VISIBLE)
         }
     }
+
+    private fun setupExpandablePanels(savedState: Bundle?) {
+        listOf(
+            Triple(binding.headerTime, binding.detailsTime, binding.chevronTime),
+            Triple(binding.headerWeather, binding.detailsWeather, binding.chevronWeather),
+            Triple(binding.headerNav, binding.detailsNav, binding.chevronNav),
+            Triple(binding.headerHelp, binding.detailsHelp, binding.chevronHelp)
+        ).forEach { (header, details, chevron) ->
+            fun updatePanel(expanded: Boolean) {
+                details.visibility = if (expanded) View.VISIBLE else View.GONE
+                chevron.rotation = if (expanded) 180f else 0f
+                ViewCompat.setStateDescription(header, getString(
+                    if (expanded) R.string.panel_expanded else R.string.panel_collapsed
+                ))
+                ViewCompat.replaceAccessibilityAction(
+                    header,
+                    androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_CLICK,
+                    getString(if (expanded) R.string.btn_collapse_panel else R.string.btn_expand_panel)
+                ) { _, _ -> header.performClick() }
+            }
+            updatePanel(savedState?.getBoolean("panel_${details.id}") == true)
+            header.setOnClickListener { updatePanel(details.visibility != View.VISIBLE) }
+        }
+    }
+
+    private fun animationsEnabled(): Boolean =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            ValueAnimator.areAnimatorsEnabled()
+        } else {
+            android.provider.Settings.Global.getFloat(
+                contentResolver, android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f
+            ) != 0f
+        }
 
     override fun onResume() {
         super.onResume()
@@ -112,18 +181,14 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         updateSettingBleDeviceCard()
         updateTestPreviews()
 
-        // Otomatis hubungkan jika sedang terputus
-        if (bleManager.currentState == BleManager.ConnectionState.DISCONNECTED &&
-            PermissionHelper.hasAllRuntimePermissions(this)) {
-            bleManager.startScanAndConnect()
+        val filter = IntentFilter(NotificationReceiverService.ACTION_NEW_NOTIF_LOG).apply {
+            addAction(BleForegroundService.ACTION_STATE_CHANGED)
         }
-
-        val filter = IntentFilter(NotificationReceiverService.ACTION_NEW_NOTIF_LOG)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(logBroadcastReceiver, filter, Context.RECEIVER_NOT_EXPORTED)
-        } else {
-            registerReceiver(logBroadcastReceiver, filter)
+        ContextCompat.registerReceiver(this, logBroadcastReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
+        if (BleForegroundService.isEnabled(this) && PermissionHelper.hasAllRuntimePermissions(this)) {
+            BleForegroundService.startService(this)
         }
+        updateServiceControls()
     }
 
     override fun onPause() {
@@ -136,6 +201,12 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
     }
 
     private fun setupUI() {
+        if (resources.configuration.fontScale >= 1.5f) {
+            binding.homeDeviceIcon.visibility = View.GONE
+            val margins = binding.homeDeviceIdentity.layoutParams as android.view.ViewGroup.MarginLayoutParams
+            margins.marginStart = 0
+            binding.homeDeviceIdentity.layoutParams = margins
+        }
         binding.rvNotifLogs.layoutManager = LinearLayoutManager(this)
         binding.rvNotifLogs.adapter = logAdapter
         updateEmptyLogsView()
@@ -146,6 +217,15 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         binding.rvBleDevices.layoutManager = LinearLayoutManager(this)
         binding.rvBleDevices.adapter = bleDeviceAdapter
 
+        binding.bottomNav.addOnLayoutChangeListener { navigation, _, _, _, _, _, _, _, _ ->
+            val clearance = navigation.height + (40 * resources.displayMetrics.density).toInt()
+            tabViews().forEach { scroll ->
+                if (scroll.paddingBottom != clearance) {
+                    scroll.setPadding(scroll.paddingLeft, scroll.paddingTop, scroll.paddingRight, clearance)
+                }
+            }
+        }
+
         // Sinkronisasi awal saklar setting & kartu BLE
         syncSettingSwitches()
         updateSettingBleDeviceCard()
@@ -153,8 +233,29 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
     }
 
     private fun setupListeners() {
+        binding.btnHomeConnect.setOnClickListener {
+            switchToSetting(animated = false)
+            binding.layoutSetting.post {
+                binding.layoutSetting.smoothScrollTo(0, binding.panelBluetooth.top)
+            }
+            if (bleManager.currentState == BleManager.ConnectionState.DISCONNECTED && !bleManager.isDiscovering) {
+                binding.btnMenuRescanBle.performClick()
+            }
+        }
+        binding.btnViewLogs.setOnClickListener { switchTab(TAB_ACTIVITY) }
+        binding.btnBackActivity.setOnClickListener { switchToMenu() }
+
+        binding.btnToggleService.setOnClickListener {
+            if (BleForegroundService.isRunning) {
+                BleForegroundService.stopService(this)
+                updateServiceControls()
+            } else {
+                startBackgroundService()
+            }
+        }
         // Navigasi tab menu dan setting
         binding.bottomNav.setOnItemSelectedListener { item ->
+            if (updatingNavigation) return@setOnItemSelectedListener true
             when (item.itemId) {
                 R.id.nav_home -> {
                     if (currentTab == TAB_MENU) {
@@ -162,6 +263,11 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
                     } else {
                         switchToMenu(animated = true)
                     }
+                    true
+                }
+                R.id.nav_tools -> {
+                    if (currentTab == TAB_TOOLS) binding.layoutTools.smoothScrollTo(0, 0)
+                    else switchTab(TAB_TOOLS)
                     true
                 }
                 R.id.nav_settings -> {
@@ -183,44 +289,40 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
             val msg = binding.etTestMessage.text?.toString()?.trim() ?: ""
 
             if (msg.isEmpty()) {
-                Toast.makeText(this, "Pesan tidak boleh kosong", Toast.LENGTH_SHORT).show()
+                binding.etTestMessage.error = getString(R.string.send_message_required)
+                binding.etTestMessage.requestFocus()
                 return@setOnClickListener
             }
 
+            binding.etTestMessage.error = null
             val payload = "[WA] $sender: $msg"
-            bleManager.sendData(payload)
+            queueTest(payload, "WA", sender, msg)
 
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            val timeStr = timeFormat.format(Date())
-            addLogItem(NotifLogItem("WA", sender, msg, timeStr))
 
-            Toast.makeText(this, "Pesan dikirim ke ESP32", Toast.LENGTH_SHORT).show()
         }
 
         // Sinkronisasi jam dan baterai
         binding.btnTestSyncTime.setOnClickListener {
             val payload = DeviceSyncHelper.buildTimeBatteryPayload(this)
             binding.tvTimeBatteryPreview.text = payload
-            bleManager.sendData(payload)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            addLogItem(NotifLogItem("TIME", "Sinkronisasi Jam HP", payload, timeFormat.format(Date())))
-            Toast.makeText(this, "Terkirim: $payload", Toast.LENGTH_SHORT).show()
+            queueTest(payload, "TIME", getString(R.string.panel_title_test_time), payload)
         }
 
         // Prakiraan cuaca live GPS
         binding.btnTestSyncWeather.setOnClickListener {
-            Toast.makeText(this, "Mengambil data cuaca Open-Meteo...", Toast.LENGTH_SHORT).show()
+            binding.btnTestSyncWeather.isEnabled = false
+            binding.btnTestSyncWeather.setText(R.string.weather_loading)
+            binding.tvSendFeedback.setText(R.string.weather_loading)
             lifecycleScope.launch {
                 val payload = WeatherManager.fetchWeatherPayload(this@MainActivity)
                 if (payload != null) {
                     binding.tvWeatherPreview.text = payload
-                    bleManager.sendData(payload)
-                    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-                    addLogItem(NotifLogItem("WEATHER", "Cuaca Terkini", payload, timeFormat.format(Date())))
-                    Toast.makeText(this@MainActivity, "Terkirim: $payload", Toast.LENGTH_SHORT).show()
+                    queueTest(payload, "WEATHER", getString(R.string.panel_title_test_weather), payload)
                 } else {
-                    Toast.makeText(this@MainActivity, "Gagal mengambil data cuaca", Toast.LENGTH_SHORT).show()
+                    binding.tvSendFeedback.setText(R.string.weather_failed)
                 }
+                binding.btnTestSyncWeather.isEnabled = true
+                binding.btnTestSyncWeather.setText(R.string.btn_send_weather_live)
             }
         }
 
@@ -228,10 +330,7 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         binding.btnTestSampleWeather.setOnClickListener {
             val sampleWeather = "[WEATHER] Jakarta|30|1|33|24|6|1012"
             binding.tvWeatherPreview.text = sampleWeather
-            bleManager.sendData(sampleWeather)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            addLogItem(NotifLogItem("WEATHER", "Cuaca Sample (Offline)", sampleWeather, timeFormat.format(Date())))
-            Toast.makeText(this, "Terkirim Sample Cuaca: $sampleWeather", Toast.LENGTH_SHORT).show()
+            queueTest(sampleWeather, "WEATHER", getString(R.string.weather_example), sampleWeather)
         }
 
         // Uji navigasi Google Maps
@@ -241,19 +340,13 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
 
         binding.btnTestNav.setOnClickListener {
             val navPayload = updateNavPreview()
-            bleManager.sendData(navPayload)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            addLogItem(NotifLogItem("NAV", "Google Maps (Tes)", navPayload, timeFormat.format(Date())))
-            Toast.makeText(this, "Terkirim: $navPayload", Toast.LENGTH_SHORT).show()
+            queueTest(navPayload, "NAV", getString(R.string.panel_title_test_nav), navPayload)
         }
 
         binding.btnTestNavStop.setOnClickListener {
             val stopPayload = "[NAV] STOP"
             binding.tvNavPreview.text = stopPayload
-            bleManager.sendData(stopPayload)
-            val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
-            addLogItem(NotifLogItem("NAV", "Google Maps (Stop)", stopPayload, timeFormat.format(Date())))
-            Toast.makeText(this, "Navigasi Dihentikan: $stopPayload", Toast.LENGTH_SHORT).show()
+            queueTest(stopPayload, "NAV", getString(R.string.btn_stop_nav), stopPayload)
         }
 
         // Hapus log notifikasi
@@ -276,20 +369,25 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         // C. Saklar Filter Aplikasi (ada di Menu Utama)
         binding.switchWA.setOnCheckedChangeListener { _, isChecked ->
             appFilterManager.isWhatsAppEnabled = isChecked
+            updateFilterSummary()
         }
         binding.switchTelegram.setOnCheckedChangeListener { _, isChecked ->
             appFilterManager.isTelegramEnabled = isChecked
+            updateFilterSummary()
         }
         binding.switchSMS.setOnCheckedChangeListener { _, isChecked ->
             appFilterManager.isSmsEnabled = isChecked
+            updateFilterSummary()
         }
         binding.switchIG.setOnCheckedChangeListener { _, isChecked ->
             appFilterManager.isInstagramEnabled = isChecked
+            updateFilterSummary()
         }
 
         // D. Tombol Mulai / Hentikan Pindai Bluetooth ESP32
         binding.btnMenuRescanBle.setOnClickListener {
             if (!PermissionHelper.hasAllRuntimePermissions(this)) {
+                startScanAfterPermission = true
                 requestPermissionLauncher.launch(PermissionHelper.getRequiredPermissions())
                 return@setOnClickListener
             }
@@ -299,11 +397,6 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
             } else {
                 val filterEsp = binding.switchFilterEspOnly.isChecked
                 bleManager.startDiscovery(filterEsp)
-                Toast.makeText(
-                    this,
-                    if (filterEsp) "Memindai modul ESP32-C3 di sekitar..." else "Memindai semua perangkat Bluetooth...",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
 
@@ -329,6 +422,7 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
                 return@setOnClickListener
             }
             Toast.makeText(this, "Menghubungkan kembali ke ESP32...", Toast.LENGTH_SHORT).show()
+            BleForegroundService.startService(this)
             bleManager.startScanAndConnect()
             updateSettingBleDeviceCard()
         }
@@ -342,109 +436,42 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         }
     }
 
-        // Transisi slide antar tab menu dan setting
+    private fun tabViews() = listOf(
+        binding.layoutMenu, binding.layoutTools, binding.layoutSetting, binding.layoutActivity
+    )
 
-    private fun switchToMenu(animated: Boolean = true) {
-        if (currentTab == TAB_MENU && binding.layoutMenu.visibility == View.VISIBLE) return
-        currentTab = TAB_MENU
-        if (binding.bottomNav.selectedItemId != R.id.nav_home) {
-            binding.bottomNav.selectedItemId = R.id.nav_home
+    private fun switchToMenu(animated: Boolean = true) = switchTab(TAB_MENU, animated)
+    private fun switchToSetting(animated: Boolean = true) = switchTab(TAB_SETTING, animated)
+
+    private fun switchTab(requestedTab: Int, animated: Boolean = true) {
+        val target = requestedTab.coerceIn(TAB_MENU, TAB_ACTIVITY)
+        val previous = currentTab
+        currentTab = target
+        activityBack.isEnabled = target == TAB_ACTIVITY
+        updatingNavigation = true
+        binding.bottomNav.selectedItemId = when (target) {
+            TAB_TOOLS -> R.id.nav_tools
+            TAB_SETTING -> R.id.nav_settings
+            else -> R.id.nav_home
         }
-
-        if (!animated) {
-            binding.layoutSetting.animate().cancel()
-            binding.layoutMenu.animate().cancel()
-            binding.layoutSetting.visibility = View.GONE
-            binding.layoutMenu.visibility = View.VISIBLE
-            binding.layoutMenu.translationX = 0f
-            binding.layoutMenu.alpha = 1f
-            return
+        updatingNavigation = false
+        tabViews().forEachIndexed { index, scroll ->
+            scroll.animate().cancel()
+            scroll.translationX = 0f
+            scroll.alpha = 1f
+            scroll.visibility = if (index == target) View.VISIBLE else View.GONE
         }
-
-        val containerWidth = binding.contentContainer.width.toFloat().let {
-            if (it <= 0f) resources.displayMetrics.widthPixels.toFloat() else it
+        val visible = tabViews()[target]
+        if (animated && previous != target && animationsEnabled()) {
+            visible.translationX = (if (target > previous) 12f else -12f) * resources.displayMetrics.density
+            visible.alpha = .65f
+            visible.animate().translationX(0f).alpha(1f).setDuration(180)
+                .setInterpolator(DecelerateInterpolator()).start()
         }
-
-        binding.layoutSetting.animate().cancel()
-        binding.layoutMenu.animate().cancel()
-
-        // Tab Menu muncul dari kiri (slide ke kanan)
-        binding.layoutMenu.visibility = View.VISIBLE
-        binding.layoutMenu.translationX = -containerWidth
-        binding.layoutMenu.alpha = 0.5f
-        binding.layoutMenu.animate()
-            .translationX(0f)
-            .alpha(1f)
-            .setDuration(260)
-            .setInterpolator(DecelerateInterpolator(1.6f))
-            .start()
-
-        // Tab Setting keluar ke arah kanan
-        binding.layoutSetting.animate()
-            .translationX(containerWidth * 0.35f)
-            .alpha(0f)
-            .setDuration(260)
-            .setInterpolator(DecelerateInterpolator(1.6f))
-            .withEndAction {
-                binding.layoutSetting.visibility = View.GONE
-                binding.layoutSetting.translationX = 0f
-                binding.layoutSetting.alpha = 1f
-            }
-            .start()
-    }
-
-    private fun switchToSetting(animated: Boolean = true) {
-        if (currentTab == TAB_SETTING && binding.layoutSetting.visibility == View.VISIBLE) return
-        currentTab = TAB_SETTING
-        if (binding.bottomNav.selectedItemId != R.id.nav_settings) {
-            binding.bottomNav.selectedItemId = R.id.nav_settings
-        }
-
-        if (!animated) {
-            binding.layoutMenu.animate().cancel()
-            binding.layoutSetting.animate().cancel()
-            binding.layoutMenu.visibility = View.GONE
-            binding.layoutSetting.visibility = View.VISIBLE
-            binding.layoutSetting.translationX = 0f
-            binding.layoutSetting.alpha = 1f
+        if (target == TAB_SETTING) {
             syncSettingSwitches()
             updateSettingBleDeviceCard()
-            return
         }
-
-        val containerWidth = binding.contentContainer.width.toFloat().let {
-            if (it <= 0f) resources.displayMetrics.widthPixels.toFloat() else it
-        }
-
-        binding.layoutMenu.animate().cancel()
-        binding.layoutSetting.animate().cancel()
-
-        // Tab Setting muncul dari kanan (slide ke kiri)
-        binding.layoutSetting.visibility = View.VISIBLE
-        binding.layoutSetting.translationX = containerWidth
-        binding.layoutSetting.alpha = 0.5f
-        binding.layoutSetting.animate()
-            .translationX(0f)
-            .alpha(1f)
-            .setDuration(260)
-            .setInterpolator(DecelerateInterpolator(1.6f))
-            .start()
-
-        // Tab Menu keluar ke arah kiri
-        binding.layoutMenu.animate()
-            .translationX(-containerWidth * 0.35f)
-            .alpha(0f)
-            .setDuration(260)
-            .setInterpolator(DecelerateInterpolator(1.6f))
-            .withEndAction {
-                binding.layoutMenu.visibility = View.GONE
-                binding.layoutMenu.translationX = 0f
-                binding.layoutMenu.alpha = 1f
-            }
-            .start()
-
-        syncSettingSwitches()
-        updateSettingBleDeviceCard()
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
@@ -466,10 +493,9 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
                     Math.abs(deltaX) > Math.abs(deltaY) * 1.35f &&
                     Math.abs(deltaX) > dragThreshold
                 ) {
-                    if (deltaX < 0 && currentTab == TAB_MENU) {
-                        switchToSetting(animated = true)
-                    } else if (deltaX > 0 && currentTab == TAB_SETTING) {
-                        switchToMenu(animated = true)
+                    if (currentTab != TAB_ACTIVITY) {
+                        val next = (currentTab + if (deltaX < 0) 1 else -1).coerceIn(TAB_MENU, TAB_SETTING)
+                        switchTab(next)
                     }
                 }
             }
@@ -500,6 +526,7 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         }
 
         Toast.makeText(this, "Menghubungkan ke ${item.name}...", Toast.LENGTH_SHORT).show()
+        BleForegroundService.startService(this)
         bleDeviceAdapter.updateConnectionStatus(null, item.address)
         bleManager.connectToDevice(item.device)
         updateSettingBleDeviceCard()
@@ -510,6 +537,12 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         binding.switchTelegram.isChecked = appFilterManager.isTelegramEnabled
         binding.switchSMS.isChecked = appFilterManager.isSmsEnabled
         binding.switchIG.isChecked = appFilterManager.isInstagramEnabled
+        updateFilterSummary()
+    }
+
+    private fun updateFilterSummary() {
+        val enabled = listOf(binding.switchWA, binding.switchTelegram, binding.switchSMS, binding.switchIG).count { it.isChecked }
+        binding.tvFilterSummary.text = getString(R.string.filter_summary_format, enabled)
     }
 
     private fun updateTestPreviews() {
@@ -543,12 +576,35 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
     private fun checkAndRequestPermissions() {
         if (!PermissionHelper.hasAllRuntimePermissions(this)) {
             requestPermissionLauncher.launch(PermissionHelper.getRequiredPermissions())
-        } else {
-            bleManager.startScanAndConnect()
+        } else if (BleForegroundService.isEnabled(this)) {
+            BleForegroundService.startService(this)
         }
     }
 
+    private fun startBackgroundService() {
+        if (!PermissionHelper.hasAllRuntimePermissions(this)) {
+            startServiceAfterPermission = true
+            requestPermissionLauncher.launch(PermissionHelper.getRequiredPermissions())
+            return
+        }
+        if (!BleForegroundService.startService(this)) {
+            Toast.makeText(this, R.string.service_start_failed, Toast.LENGTH_LONG).show()
+        }
+        updateServiceControls()
+    }
+
+    private fun updateServiceControls() {
+        val running = BleForegroundService.isRunning
+        binding.tvServiceStatus.setText(if (running) R.string.service_active else R.string.service_inactive)
+        binding.tvServiceStatus.setTextColor(ContextCompat.getColor(this,
+            if (running) R.color.status_connected else R.color.text_secondary))
+        binding.btnToggleService.setText(if (running) R.string.btn_stop_service else R.string.btn_start_service)
+        binding.btnToggleService.setIconResource(if (running) R.drawable.ic_stop else R.drawable.ic_play)
+        updateHomeReadiness()
+    }
+
     private fun checkNotificationAccess() {
+        updateHomeReadiness()
         val hasAccess = PermissionHelper.isNotificationAccessGranted(this)
         if (hasAccess) {
             binding.tvNotifStatusBadge.text = getString(R.string.status_notif_active)
@@ -557,6 +613,22 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
             binding.tvNotifStatusBadge.text = getString(R.string.status_notif_inactive)
             binding.tvNotifStatusBadge.setTextColor(ContextCompat.getColor(this, R.color.status_connecting))
         }
+    }
+
+    private fun queueTest(payload: String, code: String, sender: String, message: String) {
+        val status = getString(if (bleManager.currentState == BleManager.ConnectionState.CONNECTED)
+            R.string.send_sending else R.string.send_queued)
+        addLogItem(NotifLogItem(code, sender, message,
+            SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date()), status, payload))
+        binding.tvSendFeedback.text = status
+        binding.tvSendFeedback.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
+        bleManager.sendData(payload)
+    }
+
+    private fun updateHomeReadiness() {
+        binding.tvHomeReadiness.text = getString(R.string.home_readiness_format,
+            getString(if (BleForegroundService.isRunning) R.string.state_active else R.string.state_inactive),
+            getString(if (PermissionHelper.isNotificationAccessGranted(this)) R.string.state_active else R.string.state_inactive))
     }
 
     private fun addLogItem(item: NotifLogItem) {
@@ -568,6 +640,10 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         val isEmpty = logAdapter.itemCount == 0
         binding.tvEmptyLogs.visibility = if (isEmpty) View.VISIBLE else View.GONE
         binding.rvNotifLogs.visibility = if (isEmpty) View.GONE else View.VISIBLE
+        val latest = logAdapter.latestItem
+        binding.tvRecentMessage.text = latest?.let { "${it.sender}\n${it.message}" } ?: getString(R.string.logs_empty)
+        binding.tvRecentMeta.text = latest?.let { listOf(it.appCode, it.timestamp, it.deliveryStatus).filter { part -> part.isNotBlank() }.joinToString(" · ") } ?: ""
+        binding.tvRecentMeta.visibility = if (isEmpty) View.GONE else View.VISIBLE
     }
 
     private fun updateSettingBleDeviceCard() {
@@ -659,6 +735,14 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
                         ColorStateList.valueOf(ContextCompat.getColor(this, R.color.status_disconnected))
                 }
             }
+            binding.tvHomeDeviceName.text = bleManager.connectedDeviceName ?: bleManager.savedDeviceName
+                ?: getString(R.string.home_connect_title)
+            binding.tvHomeDeviceAddress.text = bleManager.connectedDeviceAddress ?: bleManager.savedDeviceAddress
+                ?: getString(R.string.home_ble_hint)
+            binding.btnHomeConnect.setText(if (state == BleManager.ConnectionState.DISCONNECTED)
+                R.string.home_find_device else R.string.home_manage_device)
+            binding.btnHomeConnect.setIconResource(if (state == BleManager.ConnectionState.DISCONNECTED)
+                R.drawable.ic_search else R.drawable.ic_nav_settings)
             updateSettingBleDeviceCard()
         }
     }
@@ -671,7 +755,17 @@ class MainActivity : AppCompatActivity(), BleManager.BleStateListener, BleManage
         }
     }
 
-    override fun onDataSent(data: String, success: Boolean) {}
+    override fun onDataSent(data: String, success: Boolean) {
+        runOnUiThread {
+            val label = getString(if (success) R.string.send_sent else R.string.send_failed)
+            if (logAdapter.updateDelivery(data, label)) {
+                binding.tvSendFeedback.text = label
+                binding.tvSendFeedback.setTextColor(ContextCompat.getColor(this,
+                    if (success) R.color.status_connected else R.color.status_disconnected))
+                updateEmptyLogsView()
+            }
+        }
+    }
 
     // Callback pemindaian perangkat Bluetooth
     override fun onDiscoveryStarted() {

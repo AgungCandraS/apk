@@ -1,64 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="14dp"
-    android:layout_marginBottom="10dp"
-    android:background="@drawable/bg_card_floating"
-    android:elevation="1dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/tvAppBadge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="WA"
-            android:textColor="@color/white"
-            android:textSize="11sp"
-            android:textStyle="bold"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="3dp"
-            android:background="@drawable/bg_badge"
-            android:backgroundTint="@color/primary" />
-
-        <TextView
-            android:id="@+id/tvSender"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            tools:text="Nama Pengirim"
-            android:textColor="@color/text_primary"
-            android:textSize="13.5sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-        <TextView
-            android:id="@+id/tvTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="12:30"
-            android:textColor="@color/text_muted"
-            android:textSize="11sp" />
+<?xml version='1.0' encoding='utf-8'?>
+<com.esp32.smartnotif.ui.GlassPanel xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp" android:layout_marginBottom="10dp" android:background="@drawable/bg_card_floating" app:glassCornerRadius="18dp" app:glassTone="inset" android:elevation="1dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
+        <TextView android:id="@+id/tvAppBadge" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="WA" android:textColor="@color/on_primary_container" android:textSize="14sp" android:paddingHorizontal="8dp" android:paddingVertical="3dp" android:background="@drawable/bg_badge" android:backgroundTint="@color/primary_container" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+        <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" android:importantForAccessibility="no" />
+        <TextView android:id="@+id/tvTime" android:layout_width="wrap_content" android:layout_height="wrap_content" tools:text="12:30" android:textColor="@color/text_muted" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvMessage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="6dp"
-        tools:text="Isi pesan chat yang diteruskan..."
-        android:textColor="@color/text_secondary"
-        android:textSize="12.5sp"
-        android:lineSpacingExtra="2dp"
-        android:maxLines="3" />
-
-</LinearLayout>
+    <TextView android:id="@+id/tvSender" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" tools:text="Nama Pengirim" android:textColor="@color/text_primary" android:textSize="14sp" android:fontFamily="@font/jakarta_semibold" app:fontFamily="@font/jakarta_semibold" />
+    <TextView android:id="@+id/tvMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" tools:text="Isi pesan chat yang diteruskan..." android:textColor="@color/text_secondary" android:textSize="14sp" android:lineSpacingExtra="4dp" android:fontFamily="@font/plus_jakarta_sans" app:fontFamily="@font/plus_jakarta_sans" />
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="" android:textColor="@color/text_secondary" android:textSize="12sp" android:fontFamily="@font/plus_jakarta_sans" android:lineSpacingExtra="3dp" android:layout_marginTop="8dp" android:visibility="gone" android:id="@+id/tvDeliveryStatus" app:fontFamily="@font/plus_jakarta_sans" />
+</com.esp32.smartnotif.ui.GlassPanel>

@@ -153,16 +153,6 @@ class BleManager private constructor(private val context: Context) {
         }
         updateDiscoveryDeviceStatus()
 
-        // Kelola Lifecycle Background Service & Auto-Sleep
-        try {
-            if (newState == ConnectionState.CONNECTED) {
-                com.esp32.smartnotif.service.BleForegroundService.startService(context)
-            } else if (newState == ConnectionState.DISCONNECTED) {
-                com.esp32.smartnotif.service.BleForegroundService.stopService(context)
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error toggling BleForegroundService", e)
-        }
     }
 
     fun startScanAndConnect() {
@@ -457,6 +447,7 @@ class BleManager private constructor(private val context: Context) {
     }
 
     fun connectToDevice(device: BluetoothDevice) {
+        autoReconnect = true
         if (isDiscovering) {
             stopDiscovery()
         }
